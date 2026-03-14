@@ -50,6 +50,7 @@ function TaskCard({
     isSolved ? 'correct' : isError ? 'wrong' : 'idle'
   );
   const [showHint, setShowHint] = useState(false);
+  const [hadWrongAttempt, setHadWrongAttempt] = useState(isError);
   const [shake, setShake] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -65,6 +66,7 @@ function TaskCard({
     } else {
       setStatus('wrong');
       setShake(true);
+      setHadWrongAttempt(true);
       setTimeout(() => setShake(false), 500);
       onSolve(task.id, false);
     }
@@ -128,7 +130,7 @@ function TaskCard({
               ✓
             </button>
           </div>
-          {task.hint && (
+          {task.hint && hadWrongAttempt && (
             <button
               onClick={() => setShowHint(!showHint)}
               className="mt-2 text-xs text-white/40 hover:text-violet-400 transition-colors flex items-center gap-1"
@@ -137,7 +139,7 @@ function TaskCard({
               {showHint ? 'Скрыть подсказку' : 'Показать подсказку'}
             </button>
           )}
-          {showHint && task.hint && (
+          {showHint && task.hint && hadWrongAttempt && (
             <div className="mt-2 text-xs text-amber-300 bg-amber-400/10 border border-amber-400/20 rounded-xl px-3 py-2 animate-fade-in">
               💡 {task.hint}
             </div>
